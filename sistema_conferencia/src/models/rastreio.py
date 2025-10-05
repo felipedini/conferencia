@@ -21,12 +21,12 @@ class RastreioEsperado(db.Model):
 
 class MercadoriaConferida(db.Model):
     __tablename__ = 'mercadorias_conferidas'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     codigo_rastreio = db.Column(db.String(100), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.now)
     transportadora = db.Column(db.String(50), nullable=True)
-    data_bipagem = db.Column(db.Date, default=datetime.now().date)
+    data_bipagem = db.Column(db.Date, default=lambda: datetime.now().date())
     
     def to_dict(self):
         return {
@@ -39,7 +39,7 @@ class MercadoriaConferida(db.Model):
 
 class DashboardCache(db.Model):
     __tablename__ = 'dashboard_cache'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     data = db.Column(db.Date, nullable=False, unique=True)
     transportadoras = db.Column(db.JSON, nullable=False)  # Armazena contadores por transportadora
@@ -48,7 +48,7 @@ class DashboardCache(db.Model):
     insucesso_hoje = db.Column(db.Integer, default=0)
     sem_status_hoje = db.Column(db.Integer, default=0)
     rastreios_contados = db.Column(db.Text, default='[]')  # Lista de rastreios já contados no dashboard (JSON como texto)
-    ultima_atualizacao = db.Column(db.DateTime, default=datetime.now)
+    ultima_atualizacao = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     
     def to_dict(self):
         return {
